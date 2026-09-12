@@ -78,6 +78,10 @@
     async function logic() {
         try {
             let res=await fetch("https://jsonplaceholder.typicode.com/todos");
+            //useful methods for working with fetch()
+            console.log(res.ok);
+            console.log(res.status);
+            console.log(res.url);
             let data=await res.json();
             displaying(data);
         } catch (error) {
