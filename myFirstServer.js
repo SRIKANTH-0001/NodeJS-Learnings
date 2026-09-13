@@ -1,46 +1,62 @@
-let http=require('http');
+const fs=require('fs');
 
-http.createServer((req,res)=>{
-    res.writeHead(200,{"content-type":'text/html'});
-    res.end('Hello World');
-}).listen(5000);
+//Ex-1:
+    //Blocking File read(synchronous)...
 
-console.log(this);
-console.log("_____________________________________");
+    // console.log("Blocking File reading is started!...");
+    // const data=fs.readFileSync('sample.txt','utf8');
+    // console.log(data);
+    // console.log("Blocking File reading is Completed!...");
 
-//1.Diff b/w Browsers and NodeJs
-    //1.1 Global Object in Node
-        global.mylet=29875;
-        console.log(global.mylet);
-    //1.2 Window Object in Browser
-        // window.myconst=319485;
-        // console.log(window.myconst);
-        // 319485
-    console.log("_____________________________________");
 
-//2.HTTP requests
-    //2.1 NodeJs
-        // const https=require('https');
+    //Non-Blocking file read (Asynchronous)
+    console.log("-----___________________________________________-----");
+    
 
-        // https.get('https://jsonplaceholder.typicode.com/todos',res=>{
-        //     let data=' ';
-        //     res.on('data',chunk=>data+=chunk);
-        //     res.on('end',()=>console.log(data));
-        // })
-        // console.log("_____________________________________");
+    console.log("Non-Blocking file reading is started!...");
 
-    //2.2 Browser
-        //fetch('https://jsonplaceholder.typicode.com/todos').then(res=>res.text()).then(data=>console.log(data));
+    const result=fs.readFile('sample.txt','utf8',(err,data)=>{
+        if(err) throw err;
+        console.log(data)
+    })
 
-//3.Modules
-    //3.1 NodeJs == require('fs')
-    //3.2 Browser ==import fs from 'fs'
+    console.log("In Non-Blocking file read this line should run before file read!..");
+    console.log("-----___________________________________________-----");
 
-//4.Command line arguments
-console.log('Arguments:', process.argv);
+    
+//Ex-2
 
-//5.Finding the version of the v8-engine in my nodeJs
-    console.log(`The Version of v8 Engine : ${process.versions.v8}`);
+    //Blocking File read(synchronous)..readFileSync() blocks the timeout()
+        // console.log('1. Before reading');
+
+        // setTimeout(() => {
+        //     console.log('4. Timer executed');
+        // }, 0);
+
+        // const data1=fs.readFileSync('sample.txt', 'utf8');
+
+        // console.log('2. File reading completed');
+        // console.log('3. After reading');
+
+    //Non-Blocking file read (Asynchronous)-readFile() not blocks the timeout()
+        console.log("-----___________________________________________-----");
+        
+
+        // console.log('1. Before reading');
+
+        // setTimeout(() => {
+        //     console.log('4. Timer executed');
+        // }, 0);
+
+        // fs.readFile('sample.txt', 'utf8', (err, data) => {
+        //     if (err) throw err;
+        //     console.log('3. File reading completed');
+        // });
+
+        // console.log('2. After starting reading');
+
+
+
     
 
 
