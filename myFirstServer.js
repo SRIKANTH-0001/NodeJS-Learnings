@@ -1,55 +1,62 @@
-//Node Async 
-const fs=require('fs')
+//Node Promises
 
-//1.Diff b/w node readFileSync() and readFile() in fs module
+const fs=require('fs').promises;
 
-    //1.1 readFileSync() in fs
-        // console.log("Starting the execution of blocking readFileSync()....");
-        // const Cdata=fs.readFileSync('Chennai.txt','utf8',);
-        // console.log(Cdata);
-        // console.log("__________________________----------------__________________________");
-        // const Tdata=fs.readFileSync('Tamilnadu.txt','utf8');
-        // console.log(Tdata);
-        // console.log("End of blocking readFileSync()......");
-        // console.log("__________________________----------------__________________________");
+// 1. Example to callback hell
+
+    // fs.readFile('Chennai.txt',(err,Cdata)=>{
+    //     const kd= Cdata.toString();
+    //     console.log(kd);
+    //     console.log("------------------_____________--------------------");
+    //     fs.readFile('Tamilnadu.txt',(err,Tdata)=>{
+    //         if(err) throw err;
+    //         const kd= Tdata.toString();
+    //         console.log(kd);
+    //         console.log("------------------_____________--------------------");
+    //         fs.readFile('Krishnagiri.txt',(err,Kdata)=>{
+    //             if(err) throw err;
+    //         const kd= Kdata.toString();
+    //         console.log(kd);
+    //         console.log("------------------_____________--------------------");    
+    //         })
+    //     })   
+    // })
+
+// 2. Example to Promises
+
+    // const promise=new Promise((resolve,reject)=>{
+    //     setTimeout(()=>{
+    //         const random=Math.random()>0.5;     
+    //         console.log(random);
+
+    //         if(random){
+    //             resolve("Promise bacomes Fullfilled!...");
+    //         }else{
+    //             reject("Promise Becomes Rejected!...");
+    //         }
+    //     },1000)
+    // })
+
+    // promise.then(data=>console.log("Execution completed succesfully!.."+data),
+    //             error=>console.log("Execution completed but with error!..."+error)         
+    // );  
+
+
+// 3. Example to that promise.all([])
+
+    const promise1=Promise.resolve("First Promise successfully executed!");
+    const promise2=new Promise((resolve)=>setTimeout(()=>resolve("Second promise executed succesfully!")));
+    const promise3=fs.readFile('Krishnagiri.txt','utf-8')
+    
+    Promise.all([promise1,promise2,promise3]).then(()=>console.log("All the async operations are executed successfully!"))
+    .catch((err)=>console.log("Execution failed!.."+err))
+     .finally("This is what the use of Promise.all() Method!..")
+
+     //Types of methods in Promise
+        /*
+            1.Instance Methods:  .then() , .catch() , .finally()
+            2.Static methods: .all([]) , .race() , .allSettled()
+            3.Utility Methods: .resolve(value) , .reject(reason)
         
-
-    //1.2 readFile() in fs
-        // console.log("Starting of Non-blocking readFile() ");
-        // const data1=fs.readFile('Chennai.txt','utf8',(err,data)=>{
-        //     if(err) throw err;
-        //     console.log(data);
-        // })
-        // const data2=fs.readFile('Tamilnadu.txt','utf8',(err,data)=>{
-        //     if(err) throw err;
-        //     console.log(data);
-        // })
-        // console.log("End of Non-blocking readFile().....");
-        // console.log("__________________________----------------__________________________");
-        
-//2.Applying the transitions from Callbacks-->Promises-->async/await
-
-    //2.1 For avoiding the callback hell only we are using the Prmises concept
-
-    //  const data=fetch("https://jsonplaceholder.typicode.com/todos")
-    //  .then((info)=>info.json())
-    //  .then((details)=>details.map((detail)=>{
-    //     console.log(detail.id)
-    //  })).catch((err)=>console.log("Fetching failed!"+err));
+        */
      
-    //2.2 For easier syntax we can go for async/await
-
-    async function getUserId(url) {
-        try {
-            const data=await fetch(url);
-            const details=await data.json();
-            details.forEach(element => {
-                console.log(element.title);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    getUserId("https://jsonplaceholder.typicode.com/todos");
-
