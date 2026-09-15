@@ -1,62 +1,36 @@
-//Node Promises
+//Node async/await
 
-const fs=require('fs').promises;
+//1. Sample code to async/await
+    // async function getData() {
+    //     console.log("Execution Started!....");
+    //     const result=await asyncOperation();
+    //     console.log("The result of getData function is : "+result);
+    //     return result;
+    // }
 
-// 1. Example to callback hell
+    // function asyncOperation(){
+    //     return new Promise(resolve=>{
+    //         setTimeout(()=>resolve("Created Promise becomes Fullfilled!...."),2000);
+    //     })
+    // }
 
-    // fs.readFile('Chennai.txt',(err,Cdata)=>{
-    //     const kd= Cdata.toString();
-    //     console.log(kd);
-    //     console.log("------------------_____________--------------------");
-    //     fs.readFile('Tamilnadu.txt',(err,Tdata)=>{
-    //         if(err) throw err;
-    //         const kd= Tdata.toString();
-    //         console.log(kd);
-    //         console.log("------------------_____________--------------------");
-    //         fs.readFile('Krishnagiri.txt',(err,Kdata)=>{
-    //             if(err) throw err;
-    //         const kd= Kdata.toString();
-    //         console.log(kd);
-    //         console.log("------------------_____________--------------------");    
-    //         })
-    //     })   
-    // })
+    // getData().then(data=>console.log("The async asyncOperation is successfully Executed!..."+data));
 
-// 2. Example to Promises
+//2. Error handling with async/await
+    async function fetchData() {
+        try {
+            const response=await fetch("https://jsonplaceholder.typicode.com/todos");
+            if(!response.ok){
+                throw new Error(`Failed to fetch!${response.status}`);
+            }
 
-    // const promise=new Promise((resolve,reject)=>{
-    //     setTimeout(()=>{
-    //         const random=Math.random()>0.5;     
-    //         console.log(random);
+            const data=await response.json();
+            console.log("The fetched Data is :\n ",data);
+            return data;
+        } catch (error) {
+            console.log("Error during fetching the data..--> "+error);
+            throw error;
+        }
+    }
 
-    //         if(random){
-    //             resolve("Promise bacomes Fullfilled!...");
-    //         }else{
-    //             reject("Promise Becomes Rejected!...");
-    //         }
-    //     },1000)
-    // })
-
-    // promise.then(data=>console.log("Execution completed succesfully!.."+data),
-    //             error=>console.log("Execution completed but with error!..."+error)         
-    // );  
-
-
-// 3. Example to that promise.all([])
-
-    const promise1=Promise.resolve("First Promise successfully executed!");
-    const promise2=new Promise((resolve)=>setTimeout(()=>resolve("Second promise executed succesfully!")));
-    const promise3=fs.readFile('Krishnagiri.txt','utf-8')
-    
-    Promise.all([promise1,promise2,promise3]).then(()=>console.log("All the async operations are executed successfully!"))
-    .catch((err)=>console.log("Execution failed!.."+err))
-     .finally("This is what the use of Promise.all() Method!..")
-
-     //Types of methods in Promise
-        /*
-            1.Instance Methods:  .then() , .catch() , .finally()
-            2.Static methods: .all([]) , .race() , .allSettled()
-            3.Utility Methods: .resolve(value) , .reject(reason)
-        
-        */
-     
+    fetchData().catch(error=>console.log("Error occured!.."+error.message));
