@@ -1,36 +1,39 @@
-//Node async/await
+//Error Handling in NodeJs
 
-//1. Sample code to async/await
-    // async function getData() {
-    //     console.log("Execution Started!....");
-    //     const result=await asyncOperation();
-    //     console.log("The result of getData function is : "+result);
-    //     return result;
-    // }
+const fs=require('fs').promises;
 
-    // function asyncOperation(){
-    //     return new Promise(resolve=>{
-    //         setTimeout(()=>resolve("Created Promise becomes Fullfilled!...."),2000);
-    //     })
-    // }
+async function getData(userId) {
+    try {
+        const response=await fs.readFile('random.json','utf8');
+        
+        const data=JSON.parse(response);
+        const user=data.find(user=>user.id===userId)
 
-    // getData().then(data=>console.log("The async asyncOperation is successfully Executed!..."+data));
-
-//2. Error handling with async/await
-    async function fetchData() {
-        try {
-            const response=await fetch("https://jsonplaceholder.typicode.com/todos");
-            if(!response.ok){
-                throw new Error(`Failed to fetch!${response.status}`);
-            }
-
-            const data=await response.json();
-            console.log("The fetched Data is :\n ",data);
-            return data;
-        } catch (error) {
-            console.log("Error during fetching the data..--> "+error);
-            throw error;
+        if(!user){
+            throw new Error("Invalid userData:Missing Given userId")
         }
-    }
 
-    fetchData().catch(error=>console.log("Error occured!.."+error.message));
+        console.log(data);
+        
+        return data;
+    } catch (err) {
+        if(err.code==='ENOENT'){
+            throw new Error(`user Id ${userId} not Found!`)
+        }else if(err instanceof SyntaxError){
+            throw new Error('Invalid user data format');
+        }
+        throw err;
+    }finally{
+        console.log("Execution process is completed!...");
+    }
+}
+
+(async()=>{
+   try {
+        const user=await getData(1324);
+        console.log("Fetched Data",user);
+   } catch (error) {
+        console.log(error);
+   }
+    
+})();
