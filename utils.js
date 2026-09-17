@@ -1,5 +1,20 @@
-const getCurrentDate=()=>new Date().toLocaleDateString();
-const getCurrentTime=()=>new Date().toTimeString();
+function add(a,b){
+    return a+b;
+}
 
-exports.getCurrentDate=getCurrentDate;
-exports.getCurrentTime=getCurrentTime;
+function sub(a,b){
+    return a-b;
+}
+
+//Default export
+export default sub;
+
+
+
+function mul(a,b){
+    return a*b;
+}
+
+//Named Export
+export {add,mul};
+
