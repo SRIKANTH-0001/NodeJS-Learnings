@@ -1,25 +1,28 @@
-import http from 'http';
-import url from 'url';
+import http from 'http'
+import {URL} from 'url'
+import queryString from 'querystring'
 
 const server=http.createServer((req,res)=>{
+    const baseURL="http://"+req.headers.host+"/";
+    const parsedURL=new URL(req.url,baseURL);
 
-    //parse utility provided by the url modult and which is used for converting
-    //Unstructured url string to structured  javascript object
-    const parsedURL=url.parse(req.url,true);
+    const params=Object.fromEntries(parsedURL.searchParams);
 
-    //Getting the path name from parsedURL
-    const pathname=parsedURL.pathname;
+    const queryObj={
+        name:"SRIKANTH K",
+        age:"30",
+        interests:["Coding","Coding","Coding"]
+    }
 
-    const query=parsedURL.query;
+    const queryStr=queryString.stringify(queryObj);
 
-    res.writeHead(200,{'content-type':"text/plain"});
+    res.writeHead(200,{'content-type':'text/plain'});
 
-    //Displaying the found details in json stringified format
     res.end(JSON.stringify({
-        pathname,
-        query,
-        fullURL:req.url
+        path:parsedURL.pathname,
+        params,
+        exampleQueryStr:queryStr
     },null,2))
 })
 
-server.listen(3000);
+server.listen(3000)
