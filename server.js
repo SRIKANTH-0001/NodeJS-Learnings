@@ -1,36 +1,25 @@
 import http from 'http';
+import url from 'url';
 
 const server=http.createServer((req,res)=>{
 
-    //Getting the Requesting URL and the method
-    
-    const {method,url}=req;
+    //parse utility provided by the url modult and which is used for converting
+    //Unstructured url string to structured  javascript object
+    const parsedURL=url.parse(req.url,true);
 
-    //Requesting for the headers
-        //console.log(req.headers);
-    
-    //getting the user agents and accepting languages
-    const userAgent=req.headers['user-agent'];
-    const acceptLanguage=req.headers['accept-language']
-    const cookie=req.headers['cookie']
-    const host=req.headers['host']
-    const loc=req.headers['location'] 
+    //Getting the path name from parsedURL
+    const pathname=parsedURL.pathname;
 
-    //WriteHead used to send the status code and content type and we can give multiple content types also
-    res.writeHead(200,{
-        'content-type':'text/plain',
-        'x-powered-by':'Node.js',
-        'cache-control':'no-cache,no-store,must-revalidate',
-        'set-cookie':'sessionid=abc123;HttpOnly'
-    });
-    res.end(`The req for ${method} in URL ${url}`)
-    //res.end(`You made the ${loc} request for the ${host}`)
-    //res.end(`User agent is ${userAgent} and \nAccepting language is ${acceptLanguage}`);
+    const query=parsedURL.query;
+
+    res.writeHead(200,{'content-type':"text/plain"});
+
+    //Displaying the found details in json stringified format
+    res.end(JSON.stringify({
+        pathname,
+        query,
+        fullURL:req.url
+    },null,2))
 })
 
-const PORT=3000;
-
-server.listen(PORT,"localhost",()=>{
-    console.log("Server is Listening at http://localhost:3000");
-    
-})
+server.listen(3000);
